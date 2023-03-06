@@ -39,6 +39,7 @@ Note! As much as possible, use security group IDs to reference firewall rules.
 15. Create internal ALB security group. (Alow traffic from Nginx proxy)
 16. Create Wordpress site Security group (Allow traffic from internal ALB)
 29. Create Security group for Tooling site (Allow traffic from internal ALB)
+30. Create SG for data layer (RDS and EFS)
 
 ## Compute resources section 
 30. Create an External facing Application Load Balancer (ALB)
@@ -46,7 +47,7 @@ Note! As much as possible, use security group IDs to reference firewall rules.
 32. Update VPC settings to enable DNS Hostnames
 33. Update public subnet settings to auto assign public IP address
 34. Create Key Pair for SSH
-35. Create a Launch Template for Bastion (Use a redhat based AMI) (include subnet settings for auto scaling in templates) 
+35. Create a Launch Template for Bastion (Use a redhat based AMI) (include subnet settings for auto scaling in templates) Instamce type - Micro
 36. Create ASG for Bastion
 37. Connect to Bastion server launched in the Public Subnet over SSH
 38. Create a Launch Template for nginx (Use a Ubuntu based AMI) (Private network)
@@ -54,22 +55,25 @@ Note! As much as possible, use security group IDs to reference firewall rules.
 40. Connect to the nginx server launched in the Private Subnet (Use SSH Agent to forward the public IP)
 
 ## SSH Config Sample
+
+
+
 Host *
      StrictHostKeyChecking no
 
 Host bastion
     ForwardAgent yes
-    HostName 18.134.146.217
+    HostName ec2-3-8-180-199.eu-west-2.compute.amazonaws.com
     Port 22
     User ec2-user
-    IdentityFile ~/Downloads/temp-delete.cer
+    IdentityFile ~/Downloads/practice.pem
 
 Host proxy
     ForwardAgent yes
-    HostName 18.134.146.217
+    HostName ip-10-0-4-64.eu-west-2.compute.internal
     Port 22
-    User ec2-user
-    IdentityFile ~/Downloads/temp-delete.cer
+    User ubuntu
+    IdentityFile ~/Downloads/practice.pem
     ProxyCommand ssh bastion -W %h:%p
 
 Host tooling
@@ -77,29 +81,32 @@ Host tooling
     HostName 10.0.5.183
     Port 22
     User ec2-user
-    IdentityFile ~/Downloads/temp-delete.cer
+    IdentityFile ~/Downloads/practice.pem
     ProxyCommand ssh bastion -W %h:%p
 
 
-24. Ensure that the nginx Target group is healthy
-    1.  Check the security of the instance and ensure it allows port 80
-25. Connect to server and Install nginx
-26. Create Route53 entry. Point the Domain name to the public ALB (CNAME Record)
-27. Create target group for Wordpress site
-28. Create target group for tooling site
-29. Create internal ALB and configure listeners with Host header rules for default web page, wordpress and tooling sites
 
-30. Configure instance profile and give the tooling and wordpress instances relevant permissions to access AWS resources (for example, S3, EFS)
-31. Create Launch Template for Tooling ASG (Ensure the IAM for instance profile is configured) (RedHat Linux)
-32. Create Launch Template for Wordpress ASG (Ensure the IAM for instance profile is configured)  (RedHat Linux)
-33. Create ASG for Tooling instances
-34. Create ASG for Wordpress instances
-35. Configure nginx to upstream to internal ALB
+
+1.  Ensure that the nginx Target group is healthy
+    1.  Check the security of the instance and ensure it allows port 80
+2.  Connect to server and Install nginx
+3.  Create Route53 entry. Point the Domain name to the public ALB (CNAME Record) (check /etc/resolv.conf if your web browser does not resolve)
+4.  Create default target group for the internal ALB
+5.  Create target group for Wordpress site
+6.  Create target group for tooling site
+7.  Create internal ALB and configure listeners with Host header rules for default web page, wordpress and tooling sites
+
+8.  Configure instance profile and give the tooling and wordpress instances relevant permissions to access AWS resources (for example, S3, EFS)
+9.  Create Launch Template for Tooling ASG (Ensure the IAM for instance profile is configured) (RedHat Linux)
+10. Create Launch Template for Wordpress ASG (Ensure the IAM for instance profile is configured)  (RedHat Linux)
+11. Create ASG for Tooling instances
+12. Create ASG for Wordpress instances
+13. Configure nginx to upstream to internal ALB
 
 # Configure Proxy
 
 sudo apt update -y 
-sudo apt install nginx
+sudo apt install nginx -y
 sudo unlink /etc/nginx/sites-enabled/default
 
 
@@ -109,9 +116,9 @@ sudo vi /etc/nginx/sites-available/tooling-reverse-proxy.conf
 
 server {
     listen 80;
-    server_name tooling.dev.darey.io;
+    server_name tooling.masterclass.dev.zone.uk.darey.io;
     location / {
-        proxy_pass http://internal-mcd-internal-alb-2018176062.eu-west-2.elb.amazonaws.com/;
+        proxy_pass http://internal-masterclass-feb-internal-alb-2020549966.eu-west-2.elb.amazonaws.com/;
         proxy_set_header Host $host;
     }
   }
@@ -123,9 +130,9 @@ sudo vi /etc/nginx/sites-available/wordpress-reverse-proxy.conf
 
 server {
     listen 80;
-    server_name wordpress.dev.darey.io;
+    server_name wordpress.dev.zone.darey.io;
     location / {
-        proxy_pass http://internal-test-288727612.eu-west-2.elb.amazonaws.com/;
+        proxy_pass http://internal-practice-internal-alb-638271166.eu-west-2.elb.amazonaws.com/;
         proxy_set_header Host $host;
     }
   }
@@ -136,12 +143,13 @@ sudo ln -s /etc/nginx/sites-available/wordpress-reverse-proxy.conf /etc/nginx/si
 sudo nginx -t
 systemctl reload nginx
 
-39. Configure Tooling and Wordpress (A simulation)
+1.  Check target groups and ensure they have registered instances
+2.  Configure Tooling and Wordpress (A simulation)
 
 ## Userdata for nginx
 sudo yum update -y
-sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
-sudo yum install -y dnf-utils http://rpms.remirepo.net/enterprise/remi-release-8.rpm
+sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
+sudo yum install -y dnf-utils http://rpms.remirepo.net/enterprise/remi-release-9.rpm
 sudo yum install -y nginx git
 sudo systemctl restart nginx
 ### Update the web page  
@@ -152,8 +160,8 @@ sudo vi /usr/share/nginx/html/index.html
 
 
 sudo yum update -y
-sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
-sudo yum install -y dnf-utils http://rpms.remirepo.net/enterprise/remi-release-8.rpm
+sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
+sudo yum install -y dnf-utils http://rpms.remirepo.net/enterprise/remi-release-9.rpm
 sudo yum -y install wget python3 git
 
 
@@ -174,10 +182,10 @@ sudo python3 /tmp/get-pip.py
 pip install botocore
 
 
-setsebool -P httpd_can_network_connect=1
-setsebool -P httpd_can_network_connect_db=1
-setsebool -P httpd_execmem=1
-setsebool -P httpd_use_nfs 1
+sudo setsebool -P httpd_can_network_connect=1
+sudo setsebool -P httpd_can_network_connect_db=1
+sudo setsebool -P httpd_execmem=1
+sudo setsebool -P httpd_use_nfs 1
 
 
 git clone https://github.com/aws/efs-utils
@@ -188,7 +196,7 @@ sudo make rpm
 sudo yum install -y  ./build/amazon-efs-utils*rpm
 
 sudo mkdir /var/www
-sudo mount -t efs -o tls fs-0dd171cec888d1c4a:/ /var/www
+sudo mount -t efs -o tls fs-0076449fb9032269b.efs.eu-west-2.amazonaws.com:/ /var/www
 
 
 
