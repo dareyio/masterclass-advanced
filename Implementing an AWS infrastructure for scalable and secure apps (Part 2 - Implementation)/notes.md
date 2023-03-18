@@ -196,9 +196,9 @@ sudo make rpm
 sudo yum install -y  ./build/amazon-efs-utils*rpm
 
 sudo mkdir /var/www
-sudo mount -t efs -o tls fs-0076449fb9032269b.efs.eu-west-2.amazonaws.com:/ /var/www
+sudo mount -t efs -o tls fs-05816de868c46ecae.efs.us-east-1.amazonaws.com:/ /var/www
 
-
+sudo mount -t efs -o tls 100.0.5.222:/ /var/www
 
 
 42.  Create EFS File system (SG)
@@ -207,6 +207,34 @@ sudo mount -t efs -o tls fs-0076449fb9032269b.efs.eu-west-2.amazonaws.com:/ /var
 44. Create the KMS key for RDS data encryption
 45. Create DB subnet group
 46. Create RDS/Aurora Database
+
+47. Configure cloud watch agent 
+
+curl https://s3.amazonaws.com/aws-cloudwatch/downloads/latest/awslogs-agent-setup.py -O
+sudo yum install python2 -y
+sudo python2 ./awslogs-agent-setup.py --region us-east-1 --non-interactive --configfile ./config-file.txt
+
+
+
+[general]
+state_file = /var/awslogs/state/agent-state
+
+[/var/log/messages]
+datetime_format = %b %d %H:%M:%S
+file = /var/log/messages
+buffer_duration = 5000
+log_stream_name = {instance_id}/var/log/messages
+initial_position = start_of_file
+log_group_name = /aws/ec2/instance/user-data
+
+[/var/log/syslog]
+datetime_format = %b %d %H:%M:%S
+file = /var/log/syslog
+buffer_duration = 5000
+log_stream_name = {instance_id}/var/log/syslog
+initial_position = start_of_file
+log_group_name = my-log-group
+
 
 
 ### Home Work
