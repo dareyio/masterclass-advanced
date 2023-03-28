@@ -89,5 +89,5 @@ resource "aws_launch_template" "tooling-launch-template" {
     }
   }
 
-  user_data = filebase64("${path.module}/bin/tooling-idempotent-and-advanced.sh")
+  user_data = filebase64("${path.module}/bin/tooling.sh")
 }
