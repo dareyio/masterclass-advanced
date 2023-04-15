@@ -43,6 +43,8 @@ terraform {
   }
 
 # Create the security group part of the infrastructure
-# module "networking" {
-#   source = "modules/security-group"
-# }
+module "security" {
+  source = "./modules/security-group"
+  count = 0
+  vpc_id =  module.networking.vpcID
+}
