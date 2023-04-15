@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata: 
+  name: nginx-rs
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      env: prod
+    matchExpressions:
+    - { key: tier, operator: In, values: [frontend] }
+    - { key: eksworker, operator: In, values: [fargate] }
+    - { key: workload, operator: In, values: [production] }
+  template:
+    metadata:
+      name: nginx
+      labels: 
+        env: prod
+        tier: frontend
+        eksworker: fargate
+        workload: production
+    spec:
+      containers:
+      - name: nginx-container
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+          protocol: TCP

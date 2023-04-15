@@ -1,0 +1,36 @@
+
+key1: value 
+
+key2:
+  key3: value3 
+
+
+# key2.key3 = value3
+# Value for key2 is a dictionary {}
+# A dictionary {}
+    # key2 =  {
+    #   userarn  = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/${developer_user}"
+    #   username = developer_user
+    #   groups   = ["${var.name_prefix}-developers"]
+    # }
+# You can represent an empty dictionary as {}
+
+key4: 
+  key5:
+    - value5_first_index:
+         
+    - value5_second_index  
+
+# key5   = ["value5_first_index", value5_second_index ]
+
+# key5 is a list 
+# You can represent an empty list as []
+
+key6: |
+    My name is Dare
+    My name is Dare My name is Dare My name is Dare
+    My name is Dare My name is Dare My name is Dare
+    My name is Dare My name is Dare My name is Dare
+    My name is Dare
+    My name is Dare
+    My name is Dare
