@@ -8,10 +8,8 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install the dependencies
-RUN npm install
-
-# Create a public directory
-RUN mkdir public
+RUN npm install \
+    && mkdir public
 
 # Copy the current directory contents to /app
 COPY ./app /app
