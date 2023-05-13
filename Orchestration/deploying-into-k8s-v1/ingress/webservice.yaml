@@ -1,0 +1,38 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-dev
+    external-dns.alpha.kubernetes.io/hostname: admin.nonprod.dev.darey.io
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"Ingress","metadata":{"annotations":{"cert-manager.io/cluster-issuer":"letsencrypt-dev","external-dns.alpha.kubernetes.io/hostname":"admin.nonprod.dev.darey.io","nginx.ingress.kubernetes.io/enable-cors":"true"},"labels":{"argocd.argoproj.io/instance":"dev-admin-frontend-service"},"name":"admin-frontend-service","namespace":"webservice"},"spec":{"ingressClassName":"nginx","rules":[{"host":"admin.nonprod.dev.darey.io","http":{"paths":[{"backend":{"service":{"name":"admin-frontend-service","port":{"number":80}}},"path":"/","pathType":"Prefix"}]}}],"tls":[{"hosts":["admin.nonprod.dev.darey.io"],"secretName":"admin.nonprod.dev.darey.io-tls"}]}}
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+  creationTimestamp: "2023-02-11T16:43:07Z"
+  generation: 1
+  labels:
+    argocd.argoproj.io/instance: dev-admin-frontend-service
+  name: admin-frontend-service
+  namespace: webservice
+  resourceVersion: "40340996"
+  uid: ee4b0de8-f37a-4eb9-9efe-8de6e7554564
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: admin.nonprod.dev.darey.io
+    http:
+      paths:
+      - backend:
+          service:
+            name: admin-frontend-service
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - admin.nonprod.dev.darey.io
+    secretName: admin.nonprod.dev.darey.io-tls
+status:
+  loadBalancer:
+    ingress:
+    - hostname: a166504cc3ab141429b7f8a1d6682835-1268264449.eu-west-2.elb.amazonaws.com

@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-darey
+spec:
+  type: ExternalName
+  externalName: auth.projects-review-feedback.darey.io
+
