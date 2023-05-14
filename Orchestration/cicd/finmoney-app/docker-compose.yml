@@ -1,0 +1,32 @@
+version: '3'
+services:
+  mongo:
+    build:
+      context: ./database
+      dockerfile: Dockerfile
+    restart: always
+    volumes:
+      - mongodbdata:/data/db
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: always
+    depends_on:
+      - mongo
+    ports:
+      - 3000:3000
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/finmoneydb
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - 8080:80
+
+volumes:
+  mongodbdata:

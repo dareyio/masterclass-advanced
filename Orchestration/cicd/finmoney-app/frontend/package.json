@@ -1,0 +1,29 @@
+{
+  "name": "finmoney-app",
+  "version": "1.0.0",
+  "description": "The frontend fintech application to learn DevOps from DAREY.IO",
+  "main": "index.js",
+  "scripts": {
+    "start": "react-scripts start",   
+    "build": "react-scripts build"    
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/darey-devops/masterclass-advanced.git"
+  },
+  "keywords": [
+    "finmoney"
+  ],
+  "author": "Dare Olufunmilayo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/darey-devops/masterclass-advanced/issues"
+  },
+  "homepage": "https://github.com/darey-devops/masterclass-advanced#readme",
+  "dependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-scripts": "^4.0.3",
+    "axios": "^0.24.0"
+  }
+}
