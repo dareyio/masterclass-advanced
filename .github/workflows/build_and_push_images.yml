@@ -33,6 +33,8 @@ jobs:
         working-directory: orchestration/cicd/finmoney-app/backend
 # Common directives `name`, `on`, `jobs`, `steps`, `env`, `if`, `run`, `uses`
         run: |
+          pwd 
+          ls -latr
           docker build -t finmoney-app-backend .
           docker push dareyregistry/finmoney-app-backend
 
