@@ -26,6 +26,10 @@ jobs:
         with:
           username: ${{ env.DOCKER_USERNAME }}
           password: ${{ env.DOCKER_PASSWORD }}
+      - name: debug
+        run: |
+          pwd
+          ls -latr
 
       - name: Build and push Backend Docker image
 # The working-directory is a parameter in GitHub Actions that allows you to specify the working directory for a particular step in your workflow.
@@ -33,8 +37,6 @@ jobs:
         working-directory: orchestration/cicd/finmoney-app/backend
 # Common directives `name`, `on`, `jobs`, `steps`, `env`, `if`, `run`, `uses`
         run: |
-          pwd 
-          ls -latr
           docker build -t finmoney-app-backend .
           docker push dareyregistry/finmoney-app-backend
 
