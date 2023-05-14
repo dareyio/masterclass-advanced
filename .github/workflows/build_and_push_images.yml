@@ -30,20 +30,20 @@ jobs:
       - name: Build and push Backend Docker image
 # The working-directory is a parameter in GitHub Actions that allows you to specify the working directory for a particular step in your workflow.
 # By default, each step in a workflow runs in the root directory of the repository. However, there are cases where you may want to execute a step in a specific directory within your repository.
-        working-directory: ./orchestration/cicd/finmoney-app/backend
+        working-directory: orchestration/cicd/finmoney-app/backend
 # Common directives `name`, `on`, `jobs`, `steps`, `env`, `if`, `run`, `uses`
         run: |
           docker build -t finmoney-app-backend .
           docker push dareyregistry/finmoney-app-backend
 
       - name: Build and push Frontend Docker image
-        working-directory: ./orchestration/cicd/finmoney-app/frontend
+        working-directory: orchestration/cicd/finmoney-app/frontend
         run: |
           docker build -t finmoney-app-frontend .
           docker push dareyregistry/finmoney-app-frontend
 
       - name: Build and push Database Docker image
-        working-directory: ./orchestration/cicd/finmoney-app/database
+        working-directory: orchestration/cicd/finmoney-app/database
         run: |
           docker build -t finmoney-app-database .
           docker push dareyregistry/finmoney-app-database
