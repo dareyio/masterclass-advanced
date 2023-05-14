@@ -93,6 +93,7 @@ While Ingress and Service both provide ways to expose your application to the ne
 # Deploying an Ingress Controller 
 An ingress controller is a component in a Kubernetes cluster that manages inbound network traffic and routes it to the appropriate services within the cluster. It acts as an entry point or gateway for external requests to reach the services running inside the cluster.
 
+https://kubernetes.io/docs/concepts/services-networking/ingress/
 
 -- Install latest helm 
 -- Deploy Ingress controller
@@ -117,7 +118,15 @@ Note: Open up all your security groups for now to avoid potential issues during 
 
 Using AWS EKS 
 
+-- Frontend app 
+-- backend (5 microservices)
+-- Database (RDS)
 
+Ingress controller
+
+Ingress resources 
+    -- Frontend ingress --> IC LB (Ingressclass nginx-public) React --> payment-app.liveclass.training.darey.io/pricing
+    -- payment service --> IC LB (Internal)
 
 # helm charts
 
